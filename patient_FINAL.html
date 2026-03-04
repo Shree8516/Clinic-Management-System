@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MV Dental Clinic - Patient Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .patient-avatar {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        .patient-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .medical-badge {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+        }
+        .document-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        .document-actions {
+            min-width: 100px;
+        }
+        .nav-tabs .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            border-bottom: 3px solid #0d6efd;
+        }
+        .allergy-item {
+            margin-bottom: 5px;
+        }
+        .search-patient {
+            margin-bottom: 20px;
+        }
+        #patientRegistrationForm {
+            display: none;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-tooth me-2"></i>MV Dental Clinic
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="appointments.html"><i class="fas fa-calendar-check me-1"></i> Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="patients.html"><i class="fas fa-user me-1"></i> Patient Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Patient Search/New Patient Section -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-search me-2"></i>Find Patient</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="patientSearch" placeholder="Search by name or ID">
+                                    <button class="btn btn-primary" type="button" id="searchPatientBtn">
+                                        <i class="fas fa-search me-1"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success w-100" id="newPatientBtn">
+                                    <i class="fas fa-user-plus me-1"></i> New Patient
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Registration Form (Initially hidden) -->
+        <div class="card shadow-sm mb-4" id="patientRegistrationForm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>New Patient Registration</h4>
+            </div>
+            <div class="card-body">
+                <form onsubmit="event.preventDefault(); submitPatientForm();" id="newPatientForm">
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="sno" class="form-label">S.No.</label>
+                            <input type="text" class="form-control" id="sno" readonly>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="datedOn" class="form-label">Dated On</label>
+                            <input type="date" class="form-control" id="datedOn">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="patientID" class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="patientID">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="patientName" class="form-label">Patient Name</label>
+                            <input type="text" class="form-control" id="patientName" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="" selected disabled>Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            <label for="teethNumber" class="form-label">Teeth No.</label>
+                            <input type="text" class="form-control" id="teethNumber">
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="treatmentName" class="form-label">Treatment Name</label>
+                            <input type="text" class="form-control" id="treatmentName">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="department" class="form-label">Department Name</label>
+                            <select class="form-select" id="department">
+                                <option value="" selected disabled>Select department</option>
+                                <option value="pediatric">Pediatric Dentistry</option>
+                                <option value="restorative">Restorative</option>
+                                <option value="oral-surgery">Oral Surgery</option>
+                                <option value="periodontics">Periodontics</option>
+                                <option value="prosthodontics">Prosthodontics</option>
+                                <option value="oral-medicine">Oral Medicine</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="treatmentValue" class="form-label">Value of Treatment</label>
+                            <input type="number" class="form-control" id="treatmentValue">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="billNumber" class="form-label">Bill No.</label>
+                            <input type="text" class="form-control" id="billNumber">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <input type="hidden" id="grade" value="A">
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Register Patient
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Patient Details Section (Initially hidden) -->
+        <div class="row" id="patientDetailsSection">
+            <div class="col-lg-4 mb-4">
+                <!-- Patient Profile Card -->
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-id-card me-2"></i>Patient Profile</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="patient-avatar mb-3">
+                            <img src="https://ui-avatars.com/api/?name=John+Doe&background=0d6efd&color=fff&size=150" 
+                                 alt="Patient Avatar" id="patientAvatar">
+                        </div>
+                        <h3 class="mb-2" id="displayPatientName">Patient Name</h3>
+                        <p class="text-muted mb-1"><i class="fas fa-id-card me-2"></i><span id="displayPatientID">PID: </span></p>
+                        <p class="text-muted mb-1"><i class="fas fa-birthday-cake me-2"></i><span id="displayAge">Age: </span></p>
+                        <p class="text-muted mb-3"><i class="fas fa-venus-mars me-2"></i><span id="displayGender">Gender: </span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <!-- Treatment Summary Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h4 class="mb-0"><i class="fas fa-teeth me-2"></i>Treatment Summary</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>S.No.</th>
+                                        <th>Dated On</th>
+                                        <th>Teeth No.</th>
+                                        <th>Treatment</th>
+                                        <th>Department</th>
+                                        <th>Value</th>
+                                        <th>Bill No.</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="treatmentTable">
+                                    <!-- Treatment records will be added here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5><i class="fas fa-tooth me-2"></i>MV Dental Clinic</h5>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="appointments.html">Appointments</a></li>
+                        <li><a href="patients.html">Patient Details</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center text-muted">
+                <p class="mb-0">&copy; 2023 MV Dental Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to fetch Google Sheets data as CSV
+        function fetchGoogleSheetCSV() {
+            const sheetUrl = 'patient.csv';
+
+            fetch(sheetUrl)
+                .then(response => response.text())
+                .then(csvData => {
+                    console.log('CSV Data:', csvData);
+                    sendCSVDataToBackend(csvData);  // Send the fetched CSV data to backend
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Function to send CSV data to backend
+        function sendCSVDataToBackend(csvData) {
+            fetch('http://localhost:8000/patient.html', {  // Backend URL to receive CSV data
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ csv: csvData })  // Send the CSV data as JSON to backend
+            })
+            .then(response => response.text())
+            .then(result => console.log('Data sent to backend:', result))
+            .catch(error => console.error('Error sending data to backend:', error));
+        }
+
+        // Trigger the fetch operation when the page loads
+        window.onload = function() {
+            fetchGoogleSheetCSV();
+        };
+        // Generate sequential S.No.
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initially hide patient details section
+            document.getElementById('patientDetailsSection').style.display = 'none';
+            
+            // Generate S.No.
+            let snoCounter = 1;
+            document.getElementById('sno').value = snoCounter;
+            
+            // New Patient button click handler
+            document.getElementById('newPatientBtn').addEventListener('click', function() {
+                const form = document.getElementById('patientRegistrationForm');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                
+                // Scroll to form
+                form.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Search Patient button click handler
+            document.getElementById('searchPatientBtn').addEventListener('click', function () {
+    const searchTerm = document.getElementById('patientSearch').value.trim().toLowerCase();
+    if (!searchTerm) {
+        alert('Please enter a search term');
+        return;
+    }
+
+    fetch('patient.csv')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('CSV file not found');
+            }
+            return response.text();
+        })
+        .then(csv => {
+            const rows = csv.trim().split('\n').slice(1); // Skip header
+            const match = rows.find(row => {
+                const cols = row.split(',');
+                const id = cols[2]?.trim().toLowerCase();     // PID is now at index 2
+                const name = cols[3]?.trim().toLowerCase();   
+// Patient Name is now at index 3
+
+                return id === searchTerm || name === searchTerm;
+            });
+
+            if (!match) {
+                alert('❌ No patient found.');
+                return;
+            }
+
+            const cols = match.split(',');
+
+            document.getElementById('displayPatientName').textContent = cols[2];
+            document.getElementById('displayPatientID').textContent = 'PID: ' + cols[1];
+            document.getElementById('displayAge').textContent = 'Age: ' + cols[3];
+            document.getElementById('displayGender').textContent = 'Gender: ' + cols[4];
+
+            const treatmentTable = document.getElementById('treatmentTable');
+            treatmentTable.innerHTML = '';
+            const row = treatmentTable.insertRow();
+            row.innerHTML = `
+                <td>1</td>
+                <td>${cols[0]}</td>
+                <td>${cols[5]}</td>
+                <td>${cols[6]}</td>
+                <td>${cols[7]}</td>
+                <td>${cols[8]}</td>
+                <td>${cols[9]}</td>
+            `;
+
+            document.getElementById('patientDetailsSection').style.display = 'flex';
+            document.getElementById('patientDetailsSection').scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => {
+            console.error('CSV fetch failed:', error);
+            alert('❌ Could not fetch patient data from patient.csv.');
+        });
+});
+            
+            // Form submission handler
+            document.getElementById('newPatientForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const patientData = {
+                    sno: document.getElementById('sno').value,
+                    datedOn: document.getElementById('datedOn').value,
+                    patientID: document.getElementById('patientID').value,
+                    patientName: document.getElementById('patientName').value,
+                    age: document.getElementById('age').value,
+                    gender: document.getElementById('gender').value,
+                    teethNumber: document.getElementById('teethNumber').value,
+                    treatmentName: document.getElementById('treatmentName').value,
+                    department: document.getElementById('department').value,
+                    treatmentValue: document.getElementById('treatmentValue').value,
+                    billNumber: document.getElementById('billNumber').value,
+                    grade: document.getElementById('grade').value
+                };
+                
+                // Update display
+                document.getElementById('displayPatientName').textContent = patientData.patientName;
+                document.getElementById('displayPatientID').textContent = 'PID: ' + patientData.patientID;
+                document.getElementById('displayAge').textContent = 'Age: ' + patientData.age;
+                document.getElementById('displayGender').textContent = 'Gender: ' + patientData.gender;
+                
+                // Add to treatment table
+                const treatmentTable = document.getElementById('treatmentTable');
+                const newRow = treatmentTable.insertRow();
+                newRow.innerHTML = `
+                    <td>${patientData.sno}</td>
+                    <td>${patientData.datedOn}</td>
+                    <td>${patientData.teethNumber}</td>
+                    <td>${patientData.treatmentName}</td>
+                    <td>${patientData.department}</td>
+                    <td>${patientData.treatmentValue}</td>
+                    <td>${patientData.billNumber}</td>
+                `;
+                
+                // Increment S.No.
+                snoCounter++;
+                document.getElementById('sno').value = snoCounter;
+                
+                // Clear form
+                this.reset();
+                
+                // Show patient details
+                document.getElementById('patientDetailsSection').style.display = 'flex';
+                
+                // Show success message
+                alert('Patient registered successfully!');
+            });
+        });
+
+        function submitPatientForm() {
+    // Gather form data
+    const payload = {
+        patientID: document.getElementById('patientID').value,
+        name: document.getElementById('patientName').value,
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        teethNumber: document.getElementById('teethNumber').value,
+        treatmentName: document.getElementById('treatmentName').value,
+        department: document.getElementById('department').value,
+        treatmentValue: parseFloat(document.getElementById('treatmentValue').value), // Ensure it's a float
+        billNumber: document.getElementById('billNumber').value,
+        grade: "A"  // Default grade, you can modify this based on form input if necessary
+    };
+
+    // Validate form data
+    if (!payload.patientID || !payload.name || !payload.age || !payload.gender || !payload.teethNumber || !payload.treatmentName || !payload.department || !payload.treatmentValue || !payload.billNumber) {
+        alert('❌ Please fill in all required fields.');
+        return;
+    }
+
+    console.log("Sending to Apps Script:", payload);
+
+    // Send data to Google Apps Script
+    fetch('https://script.google.com/macros/s/AKfycbzOYaW8XsI_wTLNTClK3oJE6ytUEsl0Z0cCdtNETxDVzRSc-TZRm7lDRHfiS1ni1ZEr/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert('✅ Google Apps Script Response: ' + data);
+        // Reset the form after successful submission
+        document.getElementById('newPatientForm').reset(); // Corrected form ID
+    })
+    .catch(error => {
+        alert('❌ Failed to submit data: ' + error);
+        console.error(error);
+    });
+}
+
+
+
+
+    </script>
+</body>
+</html>
